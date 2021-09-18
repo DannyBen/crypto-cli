@@ -17,7 +17,16 @@ exceeding your API quota.
 
 ## Install
 
-Place the `crypto` script somewhere in your path.
+The simplest way to install, is to run the [installation script](setup):
+
+```shell
+$ bash <(curl -Ls get.dannyb.co/crypto-cli/setup)
+```
+
+It will just download the [crypto](crypto) script to `/usr/local/bin`.
+
+If you prefer to install manually, download the [crypto](crypto) script to
+anywhere in your path and make it executable.
 
 ## Usage
 
@@ -38,3 +47,4 @@ Examples:
 
 The CoinAPI code was adapted from the
 [CoinAPI Ruby SDK](https://github.com/coinapi/coinapi-sdk/tree/master/data-api/ruby-rest)
+
