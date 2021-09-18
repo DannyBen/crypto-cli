@@ -60,7 +60,7 @@ end
 
 class CLI
   class << self
-    VERSION = 0.1
+    VERSION = "0.1.0"
 
     def call
       abort_with_usage if ARGV.size == 0

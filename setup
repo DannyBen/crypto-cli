@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+echo "=== Saving executable to /usr/local/bin/crypto"
+CURL_COMMAND="curl -s https://raw.githubusercontent.com/DannyBen/crypto-cli/master/crypto > /usr/local/bin/crypto"
+if [[ $EUID -ne 0 ]]; then
+  sudo bash -c "$CURL_COMMAND"
+  sudo chmod a+x /usr/local/bin/crypto
+else
+  bash -c "$CURL_COMMAND"
+  chmod a+x /usr/local/bin/crypto
+fi
+
+if type crypto > /dev/null; then
+  echo "=== Done. Type 'crypto' for more info."
+
+else
+  echo "=== Setup failed."
+  exit 1
+fi
