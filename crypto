@@ -1,0 +1,120 @@
+#!/usr/bin/env ruby
+
+# crypto - command line crypto exchange rates (using CoinAPI)
+# CoinAPI Ruby SDK: https://github.com/coinapi/coinapi-sdk/tree/master/data-api/ruby-rest
+
+require 'bundler/inline'
+require 'net/http'
+require 'openssl'
+require 'tmpdir'
+require 'json'
+
+gemfile do
+  source "https://rubygems.org"
+  gem "lightly"
+end
+
+class String
+  def numeric?
+    return true if self =~ /\A\d+\Z/
+    true if Float(self) rescue false
+  end
+end  
+
+class CoinAPI
+  attr_reader :api_key, :base_url, :headers
+
+  def initialize(api_key)
+    @api_key = api_key
+    @base_url = 'https://rest.coinapi.io/v1/'
+    @headers = {
+      'X-CoinAPI-Key' => api_key,
+      'Accept' => 'application/json',
+    }
+  end
+
+  def rate(from, to)
+    parameters ||= {}
+    endpoint = "exchangerate/#{from}/#{to}"
+    request(endpoint)[:rate]
+  end
+
+private
+
+  def request(endpoint)
+    cache.get endpoint do
+      uri = URI.join base_url, endpoint
+      request = Net::HTTP::Get.new uri
+      request.initialize_http_header headers
+      http = Net::HTTP.new uri.host, uri.port
+      http.use_ssl = true
+      response = http.request request
+      JSON.parse response.body, symbolize_names: true
+    end
+  end
+
+  def cache
+    @cache ||= Lightly.new life: '1h', dir: File.join(Dir.tmpdir, "coinapi")
+  end
+end
+
+class CLI
+  class << self
+    VERSION = 0.1
+
+    def call
+      abort_with_usage if ARGV.size == 0
+      abort "Please set the COINAPI_KEY environment variable" unless ENV['COINAPI_KEY']
+
+      api_key = ENV['COINAPI_KEY']
+      api = CoinAPI.new api_key
+      rate = api.rate args[:from], args[:to]
+      puts rate * args[:amount]
+    end
+
+  private
+
+    def usage
+      <<~EOF
+        crypto #{VERSION}
+
+        Usage:
+          crypto [<amount>] <from_currency> [to] [<to_currency>]
+
+        Examples:
+          crypto btc
+          crypto 0.5 eth
+          crypto 0.5 eth usd
+          crypto 0.5 eth to eur
+      EOF
+    end
+
+    def abort_with_usage
+      puts usage
+      exit 1
+    end
+
+    def args
+      @args ||= args!
+    end
+
+    def args!
+      args = ARGV
+      if args[0].numeric?
+        amount = args.shift.to_f
+      else
+        amount = 1
+      end
+
+      from = args.shift&.upcase
+      abort "Invalid syntax" unless from
+
+      args.shift if args[0] == 'to'
+      to = args.shift&.upcase || 'USD'
+      
+      { amount: amount, from: from, to: to }
+    end
+  end
+end
+
+CLI.call
