@@ -22,6 +22,8 @@ Place the `crypto` script somewhere in your path.
 ## Usage
 
 ```
+$ crypto
+
 Usage:
   crypto [<amount>] <from_currency> [to] [<to_currency>]
 
