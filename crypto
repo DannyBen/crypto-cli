@@ -54,7 +54,7 @@ private
   end
 
   def cache
-    @cache ||= Lightly.new life: '1h', dir: File.join(Dir.tmpdir, "coinapi")
+    @cache ||= Lightly.new life: '15m', dir: File.join(Dir.tmpdir, "coinapi")
   end
 end
 
