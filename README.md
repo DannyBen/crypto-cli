@@ -10,9 +10,7 @@ line.
 
 Note that the first time you run the script, it will install the
 [Lightly gem](https://github.com/DannyBen/lightly) if it is not already
-installed.
-
-Lightly is used for caching the results for 15 minutes, in order to avoid
+installed. Lightly is used for caching the results for 15 minutes, in order to avoid
 exceeding your API quota.
 
 ## Install
@@ -42,6 +40,10 @@ Examples:
   crypto 0.5 eth usd
   crypto 0.5 eth to eur
 ```
+
+## Caching
+
+API calls are cached for 15 minutes in `/tmp/coinapi`.
 
 ## Credits
 
