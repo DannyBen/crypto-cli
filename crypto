@@ -83,13 +83,14 @@ class CLI
         crypto #{VERSION}
 
         Usage:
-          crypto [<amount>] <from_currency> [to] [<to_currency>]
+          crypto [<amount>] <from_currency> [to|in] [<to_currency>]
 
         Examples:
           crypto btc
           crypto 0.5 eth
           crypto 0.5 eth usd
           crypto 0.5 eth to eur
+          crypto doge in usd
       EOF
     end
 
@@ -104,7 +105,7 @@ class CLI
 
     def args!
       args = ARGV
-      if args[0].numeric?
+      if args.first.numeric?
         amount = args.shift.to_f
       else
         amount = 1
@@ -113,7 +114,7 @@ class CLI
       from = args.shift&.upcase
       abort "Invalid syntax" unless from
 
-      args.shift if args[0] == 'to'
+      args.shift if ['to', 'in'].include? args.first.downcase
       to = args.shift&.upcase || 'USD'
       
       { amount: amount, from: from, to: to }
