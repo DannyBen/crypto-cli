@@ -32,13 +32,14 @@ anywhere in your path and make it executable.
 $ crypto
 
 Usage:
-  crypto [<amount>] <from_currency> [to] [<to_currency>]
+  crypto [<amount>] <from_currency> [to|in] [<to_currency>]
 
 Examples:
   crypto btc
   crypto 0.5 eth
   crypto 0.5 eth usd
   crypto 0.5 eth to eur
+  crypto doge in usd
 ```
 
 ## Caching
