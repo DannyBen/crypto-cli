@@ -11,7 +11,7 @@ describe "crypto" do
 
   context "with just a currency name" do
     it "converts 1 unit to USD" do
-      expect(crypto "eth").to match(/1 ETH = \d+\.\d+ USD/)
+      expect(crypto "eth").to match(/1 ETH = \d+ USD/)
     end
   end
 
@@ -27,7 +27,7 @@ describe "crypto" do
 
   context "with source and target currency" do
     it "converts to the target currency" do
-      expect(crypto "eth eur").to match(/1 ETH = (\d+\.\d+) EUR/)
+      expect(crypto "eth eur").to match(/1 ETH = (\d+) EUR/)
     end
   end
 
