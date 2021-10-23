@@ -20,7 +20,19 @@ class String
     return true if self =~ /\A\d+\Z/
     true if Float(self) rescue false
   end
-end  
+end
+
+class Float
+  def smart_round
+    if self > 100
+      round
+    elsif self > 10
+      round 2
+    else
+      round 4
+    end
+  end
+end
 
 class CoinAPI
   attr_reader :api_key, :base_url, :headers
@@ -37,7 +49,7 @@ class CoinAPI
   def rate(from, to)
     parameters ||= {}
     endpoint = "exchangerate/#{from}/#{to}"
-    request(endpoint)[:rate]
+    request(endpoint)[:rate].smart_round
   end
 
 private
